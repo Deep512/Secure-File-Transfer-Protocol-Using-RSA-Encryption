@@ -12,7 +12,6 @@
 #include <signal.h>
 #define MIN 16500
 #define MAX 32500
-#define PORT 4444
 
 long int generate_primes(long int prime_array[])
 {
@@ -54,9 +53,6 @@ count=generate_primes(prime_array);
 //There are total 1575(which is value of 'count' variable at this PRIME_Point)
 //primes between this range, And the program will randomly select any
 //2-primes from those generated primes.
-
-//randomize();     //This intializes seed for random numbers from clock.
-                   //That's why 'time.h' is included. :)
 
 prime1_index=prime2_index=2;
 int low=1000;
@@ -114,7 +110,6 @@ void decryption(long int PRIVATE_EXPO,long int MOD,char *encrypted_str,int n,cha
     long long int decrypted_value;
     char decrypted_msg[100000],value_str[20]={'\0'}, *endptr;
 	FILE *fp=fopen(filename,"w+");
-    //printf("\n\nEncrypted str:%s",encrypted_str);
     for(i=0,j=0;i<n;i++,j++){
 	if(encrypted_str[i]!='\n'){
 		value_str[j] = encrypted_str[i];
@@ -132,6 +127,18 @@ void decryption(long int PRIVATE_EXPO,long int MOD,char *encrypted_str,int n,cha
 
 int main(int argc,char **argv)
 {
+if(argc<2){
+	perror("ip ,filename and port not provided");
+	exit(0);
+}	
+if(argc<3){
+	perror("filename and port not provided");
+	exit(0);
+}
+if(argc<4){
+	perror("port not provided");
+	exit(0);
+}
 long int pub_expo,pri_expo,mod;
 char pub_expo_str[256]={'\0'},mod_str[256]={'\0'},filename[256]={'\0'},content[100000]={'\0'},f[256]={'\0'};
 int i,j;
@@ -142,14 +149,19 @@ key_generate(&pri_expo,&pub_expo,&mod);
 sprintf(pub_expo_str,"%ld",pub_expo);   
 sprintf(mod_str,"%ld",mod);
 sockfd=socket(AF_INET,SOCK_STREAM,0);
+if(sockfd==-1){
+	perror("socket not created");
+	exit(0);
+}
 bzero(&servaddr,sizeof(servaddr));
 servaddr.sin_family=AF_INET;
-servaddr.sin_port=htons(PORT);
+servaddr.sin_port=htons(atoi(argv[3]));
 inet_pton(AF_INET,argv[1],&servaddr.sin_addr);
-connect(sockfd,(struct sockaddr*)&servaddr,sizeof(servaddr));
-printf("\nenter the filename:");
-scanf("%s",filename);
-printf("\n");
+if(connect(sockfd,(struct sockaddr*)&servaddr,sizeof(servaddr))==-1){
+	perror("connection error");
+	exit(0);
+}
+strcpy(filename,argv[2]);
 strcpy(f,filename);
 strcat(filename,"#");	strcat(filename,pub_expo_str);  //argv[2] = filename + pub_expo_str, now
 strcat(filename,"#");	strcat(filename,mod_str);   //argv[2] = filename + pub_expo_str + mod_str, now
