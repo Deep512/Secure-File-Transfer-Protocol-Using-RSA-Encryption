@@ -3,9 +3,7 @@ This repository is about transferring the secure data from one computer to anoth
 Key Features and install instructions:
 
 1. You can have client at say system-1 and Server at say system-2.
-2. You can create executable by just moving to the folder and using simple 'make' command: i.e.: $ cd  ~/client/ and then $ make
-,same with server, move the server folder $cd ~/server/ and then $ make .
-3.Next time you make any changes in the source files or header files while expermenting just run 'make' command it will handle all the hurdle of compilation but make sure 'Makefile' is not altered or removed.
-4. Run 'server' excutable at system-2 with port address you want to assign for transmission. i.e.: ./server 4444
-5. When server is established, Run 'client' executable on system-1 with ip-address of server, filename of requested file and port number used by server. i.e. if we consider client and server are on same system then ip would be 127.0.0.1: ./client 127.0.0.1  message.txt 4444
+2. You can create executable by compiling respective client and server programs i.e.: $ gcc client.c -o cli and then $ gcc server.c -o ser
+4. Run 'server' excutable at system-2 with port address you want to assign for transmission. i.e.: ./ser 4444
+5. When server is established, Run 'client' executable on system-1 with ip-address of server, filename of requested file and port number used by server. i.e. if we consider client and server are on same system then ip would be 127.0.0.1: ./cli 127.0.0.1  message.txt 4444
 6. Bingo there will be a file with filename you requested in your 'client' folder.
